@@ -1,11 +1,11 @@
-#基于create-react-app引入redux的脚手架搭建
+# 基于create-react-app引入redux的脚手架搭建
 
-##一、背景介绍
-我们知道`react`可以帮我们管理应用和组件的状态，但是当多个组件要访问同一个状态的时候，子组件要使用到向上很多层父组件的状态，那么`react`只能一层层向下传递了，很麻烦，这时候就可以用redux来解决这种**“共享状态”**的问题了。redux就是为了解决`react`组件间通信和组件间状态共享而提出的一种解决方案，主要涉及了三个部分：**`store + action + reducer`**。
+## 一、背景介绍
+我们知道`react`可以帮我们管理应用和组件的状态，但是当多个组件要访问同一个状态的时候，子组件要使用到向上很多层父组件的状态，那么`react`只能一层层向下传递了，很麻烦，这时候就可以用redux来解决这种**“共享状态”**的问题了。redux就是为了解决`react`组件间通信和组件间状态共享而提出的一种解决方案，主要涉及了三个部分：**`store 、 action 、 reducer`**。
 
 下面我们通过创建项目引入redux搭建脚手架，以计数器的例子来说明redux的作用。
 
-##二、实现步骤
+## 二、实现步骤
 
 ### 1、创建项目
 选择你想要存放项目的路径，假定当前所在的文件目录为` D:\work\workspace\react` ，在目录空白处按住键盘shift键，同时鼠标右键，选择“在此处打开命令窗口”，在打开的命令行窗口中输入命令
@@ -77,7 +77,7 @@ redux数据流首先从UI组件`dispatch`出`actions`，在`createStore`时是�
 
 
 ### 6、引入redux
-####(1)定义组件，确定效果
+#### (1)定义组件，确定效果
 我们要做的是一个计数器，由一个显示数字的地方和两个按钮构成，所以我们可以修改`App.js`的代码，再根据实际情况写出对应的样式，达到我们想要的效果。
 
 `App.js`代码如下
@@ -97,6 +97,10 @@ redux数据流首先从UI组件`dispatch`出`actions`，在`createStore`时是�
 	  }
 	}
 	export default Counter;
+
+
+
+
 
 `App.css`代码如下：
 
@@ -118,18 +122,23 @@ redux数据流首先从UI组件`dispatch`出`actions`，在`createStore`时是�
 		margin-top: 30px;
 	}
 
+
+
+
 查看页面的效果：
 
 ![页面效果](https://github.com/LiJinLan/react-redux-demo/raw/master/reduxImages/couterShow1.png "页面效果")
 
 我们可以看到，页面中已经出现了我们想要的效果，计数器居中显示，并且初始值为0，还有两个可以操作的按钮。
 
-####(2)事件处理，将组件与store树建立连接
+#### (2)事件处理，将组件与store树建立连接
 由`react`我们知道，要页面发生改变，只能通过修改`state`或`props`,而由`redux`的数据流我们可以知道，要修改页面是要`dispatch`一个`action`,并且组件要与`store`树建立连接，这样才可以方便拿到`state`的值进行修改。所以我们要想计数器的数字随着按钮的点击而改变，需要给按钮添加点击事件，并`dispatch`一个`action`给`reducer`进行处理。
 
 首先在组件中导入connect
 
 	import { connect } from 'react-redux';
+
+
 
 然后将组件与`store`建立连接，`connect`的第一参数`mapStateToProps`是将`state`的值拿到，而且返回的是一个对象，如下所示，其中`handleCounter`是对数据进行处理的`reducer`。
 
@@ -142,7 +151,12 @@ redux数据流首先从UI组件`dispatch`出`actions`，在`createStore`时是�
 
 	export default connect( mapStateToProps )(Counter);
 
+
+
+
 建立连接后，给按钮添加点击事件处理，`dispatch`一个`action`对象，且该`action`对象要有一个type属性，
+
+
 
 	<button onClick={this.handleAdd.bind(this)}>增加</button>
 	<button onClick={this.handleSub.bind(this)}>减少</button>
@@ -154,6 +168,8 @@ redux数据流首先从UI组件`dispatch`出`actions`，在`createStore`时是�
 	  handleSub() {
 		this.props.dispatch({ type: 'SUB'});
 	  }
+
+
 
 注意，在事件处理时，由于我们自定义的函数里面用到的`this`不会自动绑定到组件这个实例上，所以我们要通过`.bind(this)`进行绑定，或者也可以通过箭头函数进行绑定，比如，上面的代码也可以写成这样：
 
@@ -171,6 +187,8 @@ redux数据流首先从UI组件`dispatch`出`actions`，在`createStore`时是�
 
 
 在src文件夹下新建一个文件，命名为`reducer.js`，编写`handleCounter`函数，对组件发出的`action.type`进行判断，执行相应的操作。导出时使用到了`combineReducers`，这是方便将多个`reducer`一起导出，当然这里只有一个`reducer`,也可以不用`combineReducers`。
+
+
 
 `reducer.js`文件的代码如下：
 
@@ -191,7 +209,10 @@ redux数据流首先从UI组件`dispatch`出`actions`，在`createStore`时是�
 		handleCounter
 	});
 
-####(4)创建store树
+
+
+
+#### (4)创建store树
 在入口文件`index.js`中创建唯一的store树，并使组件可以拿到store的值，所以要用到`Provider`。
 
 `index.js`代码如下：
@@ -217,7 +238,7 @@ redux数据流首先从UI组件`dispatch`出`actions`，在`createStore`时是�
 	serviceWorker.unregister();
 
 
-####(5)从store树上拿到数据，并显示在计数器上
+#### (5)从store树上拿到数据，并显示在计数器上
 
 `App.js`最终代码如下：
 
@@ -260,7 +281,7 @@ redux数据流首先从UI组件`dispatch`出`actions`，在`createStore`时是�
 	export default connect( mapStateToProps )(Counter);
 
 
-##三、效果展示
+## 三、效果展示
 这样就可以使用redux实现计数器的效果了，当点击增加按钮时，计数器的数字就会加一，而点击减少按钮时，计数器的数字就会减一。
 
 ![增加](https://github.com/LiJinLan/react-redux-demo/raw/master/reduxImages/addResoult.png "增加")
